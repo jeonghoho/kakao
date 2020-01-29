@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>5.0.2.RELEASE</version>
+			<version>5.1.0.RELEASE</version>
 		</dependency>
 
 		<!-- h2 database에 대한 jdbc드라이버를 추가한다. 다른 데이터베이스를 사용하려면? 수정해줘야한다. -->
