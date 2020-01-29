@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="examples.springmvc.dao.BoardMapper">
+
+    <resultMap id="board_result_map" type="examples.springmvc.dto.Board">
+        <result column="id" property="id" javaType="java.lang.Long"/>
+        <result column="name" property="userName" javaType="java.lang.String"/>
+        <result column="user_id" property="userId" javaType="java.lang.String"/>
+        <result column="title" property="title" javaType="java.lang.String"/>
+        <result column="content" property="content" javaType="java.lang.String"/>
+        <result column="read_count" property="readCount" javaType="java.lang.Integer"/>
+        <result column="write_date" property="writeDate" javaType="java.util.Date"/>
+        <result column="update_date" property="updateDate" javaType="java.util.Date"/>
+    </resultMap>
+
+    <select id="getBoards" resultMap="board_result_map" parameterType="examples.springmvc.dto.SearchCondition">
+        SELECT b.id, b.user_id, b.title, b.content, b.read_count, b.write_date, b.update_date, u.name FROM board as b join users as u on b.user_id = u.user_id
+        <where>
+            <if test="kind == 'name'">
+                u.name like #{value}
+            </if>
+            <if test="kind == 'title'">
+                b.title like #{value}
+            </if>
+            <if test="kind == 'content'">
+                b.content like #{value}
+            </if>
+        </where>
+        order by b.id desc limit #{count} offset #{offset}
+    </select>
+
+    <select id="getBoard" resultMap="board_result_map" parameterType="java.lang.Integer">
+         SELECT b.id, b.user_id, b.title, b.content, b.read_count, b.write_date, b.update_date, u.name  FROM board as b join users as u on b.user_id = u.user_id where b.id = #{id}
+    </select>
+
+    <update id="plusOneBoardCount" parameterType="java.lang.Long">
+        update board set read_count = read_count + 1 where id = #{id}
+    </update>
+
+    <delete id="deleteBoard" parameterType="java.lang.Long">
+        delete from board where id = #{id}
+    </delete>
+
+    <insert id="addBoard" parameterType="examples.springmvc.dto.Board" keyProperty="id"  useGeneratedKeys="true">
+        insert into board (user_id, title, content, read_count, write_date, update_date) values(#{userId}, #{title}, #{content}, 0, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())
+    </insert>
+
+    <insert id="updateBoard" parameterType="examples.springmvc.dto.Board" keyProperty="id"  useGeneratedKeys="true">
+        update board
+        set title = #{title}, content = #{content}, update_date = CURRENT_TIMESTAMP()
+        where id = #{id}
+    </insert>
+
+    <select id="getBoardCount" resultType="java.lang.Integer" parameterType="examples.springmvc.dto.SearchCondition">
+        SELECT count(*) FROM board as b join users as u on b.user_id = u.user_id
+        <where>
+            <if test="kind == 'name'">
+                u.name like #{value}
+            </if>
+            <if test="kind == 'title'">
+                b.title like #{value}
+            </if>
+            <if test="kind == 'content'">
+                b.content like #{value}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="examples.springmvc.dao.BoardFilesMapper">
+
+    <resultMap id="board_files_result_map" type="examples.springmvc.dto.BoardFile">
+        <result column="id" property="id" javaType="java.lang.Long"></result>
+        <result column="board_id" property="boardId" javaType="java.lang.Long"></result>
+        <result column="file_name" property="fileName" javaType="java.lang.String"></result>
+        <result column="save_file_name" property="saveFileName" javaType="java.lang.String"></result>
+        <result column="mime_type" property="mimeType" javaType="java.lang.String"></result>
+        <result column="file_length" property="fileLength" javaType="java.lang.Integer"></result>
+    </resultMap>
+
+    <select id="getBoardFiles" resultMap="board_files_result_map" parameterType="java.lang.Long">
+        SELECT id, board_id, file_name, save_file_name, mime_type, file_length from board_files where board_id = #{id}
+    </select>
+
+    <select id="getBoardFile" resultMap="board_files_result_map" parameterType="java.lang.Long">
+        SELECT id, board_id, file_name, save_file_name, mime_type, file_length from board_files where id = #{id}
+    </select>
+
+    <delete id="deleteBoardFiles" parameterType="java.lang.Long">
+        delete from board_files where board_id = #{id}
+    </delete>
+
+    <insert id="addBoardFile" parameterType="examples.springmvc.dto.BoardFile" keyProperty="id"  useGeneratedKeys="true">
+        insert into board_files (board_id, file_name, save_file_name, mime_type, file_length)
+         values(#{boardId}, #{fileName}, #{saveFileName}, #{mimeType}, #{fileLength})
+    </insert>
+</mapper>
